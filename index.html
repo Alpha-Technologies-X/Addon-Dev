@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My GitHub Projects - Dashboard</title>
+    <title>Addon for Dev - GitHub Dashboard</title>
     <style>
         :root {
             --primary-color: #2ea44f;
@@ -36,7 +36,6 @@
             padding: 0 20px;
         }
 
-        /* Header Styles */
         header {
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
@@ -60,10 +59,6 @@
             font-size: 1.2rem;
             text-decoration: none;
             color: var(--text-color);
-        }
-
-        .logo:hover {
-            color: var(--primary-color);
         }
 
         .logo-image {
@@ -100,8 +95,6 @@
             cursor: pointer;
             font-size: 14px;
             transition: all 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
         }
 
         .btn-primary {
@@ -115,7 +108,6 @@
             transform: translateY(-1px);
         }
 
-        /* Main Content */
         .dashboard {
             padding: 2rem 0;
         }
@@ -139,7 +131,6 @@
             font-size: 1.1rem;
         }
 
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -183,7 +174,6 @@
             font-weight: 500;
         }
 
-        /* Projects Grid */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -253,13 +243,6 @@
             padding: 1.5rem;
         }
 
-        .project-language {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 1rem;
-        }
-
         .language-color {
             width: 12px;
             height: 12px;
@@ -297,7 +280,6 @@
             color: #586069;
         }
 
-        /* Loading State */
         .loading {
             display: flex;
             justify-content: center;
@@ -327,7 +309,6 @@
             font-size: 1.1rem;
         }
 
-        /* Error State */
         .error-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -353,7 +334,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Login Section */
         .login-section {
             text-align: center;
             padding: 4rem 2rem;
@@ -381,21 +361,38 @@
             font-size: 1.1rem;
         }
 
-        /* 2FA Support */
-        .twofa-support {
+        .setup-steps {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto 2rem;
             background: var(--bg-color);
-            padding: 1rem;
+            padding: 1.5rem;
             border-radius: 8px;
-            margin-top: 1rem;
             border: 1px solid var(--border-color);
         }
 
-        .twofa-icon {
-            color: var(--success-color);
-            margin-right: 0.5rem;
+        .setup-steps ol {
+            margin-left: 1.5rem;
         }
 
-        /* Responsive */
+        .setup-steps li {
+            margin-bottom: 0.5rem;
+        }
+
+        .app-install-section {
+            background: var(--success-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .app-install-link {
+            color: white;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             .projects-grid {
                 grid-template-columns: 1fr;
@@ -418,13 +415,12 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
                 <a href="#" class="logo">
-                    <img src="https://avatars.githubusercontent.com/in/2181274?s=30&u=2cb018b11eb4f4a6264c8ab81d20b2d8a1ff11d6&v=4" alt="GitHub Logo" class="logo-image">
-                    <span>My GitHub Projects</span>
+                    <img src="https://avatars.githubusercontent.com/in/2181274?s=30&u=2cb018b11eb4f4a6264c8ab81d20b2d8a1ff11d6&v=4" alt="Addon for Dev Logo" class="logo-image">
+                    <span>Addon for Dev</span>
                 </a>
                 <div class="auth-section">
                     <div id="user-info" class="user-info" style="display: none;">
@@ -438,61 +434,67 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container">
-        <!-- Login Section (shown when not authenticated) -->
         <section id="login-section" class="login-section">
-            <div class="login-icon">🚀</div>
-            <h1 class="login-title">Connect Your GitHub Account</h1>
+            <div class="login-icon">⚛</div>
+            <h1 class="login-title">Welcome to Addon for Dev</h1>
             <p class="login-description">
-                View all your GitHub projects in one beautiful dashboard. 
-                Get insights into your repositories, stars, and contributions.
+                Connect your GitHub account to access powerful development tools and insights.
             </p>
-            <button id="main-login-btn" class="btn btn-primary" style="padding: 12px 24px; font-size: 1.1rem;">
-                Connect with GitHub
-            </button>
-            <div class="twofa-support">
-                <span class="twofa-icon">✅</span>
-                <strong>2FA Supported:</strong> Works with GitHub Two-Factor Authentication
+
+            <div class="setup-steps">
+                <h3>📋 Setup Instructions:</h3>
+                <ol>
+                    <li><strong>Install the GitHub App</strong> - Click the link below to install "Addon for Dev" on your GitHub account</li>
+                    <li><strong>Connect Your Account</strong> - After installation, return here and click "Connect GitHub"</li>
+                    <li><strong>Access Features</strong> - Start using the development tools and insights</li>
+                </ol>
+                
+                <div class="app-install-section">
+                    <a id="app-install-link" href="#" class="app-install-link" target="_blank">
+                        🚀 Install Addon for Dev on GitHub
+                    </a>
+                </div>
             </div>
+
+            <button id="main-login-btn" class="btn btn-primary" style="padding: 12px 24px; font-size: 1.1rem;">
+                Connect GitHub Account
+            </button>
         </section>
 
-        <!-- Dashboard (shown when authenticated) -->
         <section id="dashboard" class="dashboard" style="display: none;">
             <div class="dashboard-header">
-                <h1 class="dashboard-title">My GitHub Projects</h1>
-                <p class="dashboard-subtitle" id="dashboard-subtitle">Your development portfolio at a glance</p>
+                <h1 class="dashboard-title">Development Dashboard</h1>
+                <p class="dashboard-subtitle" id="dashboard-subtitle">Powered by Addon for Dev</p>
             </div>
 
-            <!-- Stats Overview -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">📚</div>
                     <div class="stat-value" id="total-repos">0</div>
-                    <div class="stat-label">Total Repositories</div>
+                    <div class="stat-label">Repositories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔀</div>
+                    <div class="stat-value" id="open-prs">0</div>
+                    <div class="stat-label">Open PRs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🐛</div>
+                    <div class="stat-value" id="open-issues">0</div>
+                    <div class="stat-label">Open Issues</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⭐</div>
                     <div class="stat-value" id="total-stars">0</div>
                     <div class="stat-label">Total Stars</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🍴</div>
-                    <div class="stat-value" id="total-forks">0</div>
-                    <div class="stat-label">Total Forks</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👁️</div>
-                    <div class="stat-value" id="total-watchers">0</div>
-                    <div class="stat-label">Total Watchers</div>
-                </div>
             </div>
 
-            <!-- Projects Grid -->
             <div id="projects-container">
                 <div class="loading">
                     <div class="spinner"></div>
-                    <div class="loading-text">Loading your projects...</div>
+                    <div class="loading-text">Loading your development data...</div>
                 </div>
             </div>
         </section>
@@ -500,20 +502,26 @@
 
     <script>
         // =============================================================================
-        // CONFIGURATION - Add your credentials here in the code
+        // CONFIGURATION - Add your GitHub App credentials here
         // =============================================================================
         
-        // GitHub OAuth App Configuration
-        const GITHUB_CONFIG = {
-            clientId: "Ov23liWe3jQcRxPDfSdE", // Replace with your OAuth Client ID
-            clientSecret: "0b3f0e15f72f373b1729b5c22731eab471f049d7", // Replace with your OAuth Client Secret
-            redirectUri: window.location.origin + window.location.pathname
-        };
-
-        // GitHub App Configuration (Alternative method)
         const GITHUB_APP_CONFIG = {
-            appId: "2181274",// Replace with your GitHub App ID
-            privateKey: `ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=`// Replace with your private key
+            // Your GitHub App ID (find in your app settings)
+            appId: "2181274",
+            
+            // Your GitHub App Installation URL (replace YOUR_APP_ID with actual app ID)
+            installUrl: "https://github.com/apps/addon-for-dev",
+            
+            // Your GitHub OAuth App Client ID
+            clientId: "Ov23liWe3jQcRxPDfSdE",
+            
+            // Your GitHub OAuth App Client Secret
+            clientSecret: "66b53f17ddc3abaafe799f114d6934f4fe55ea6e",
+            
+            // Your GitHub App Private Key (PEM format)
+            privateKey: `-----BEGIN RSA PRIVATE KEY-----
+ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
+-----END RSA PRIVATE KEY-----`
         };
 
         // =============================================================================
@@ -526,6 +534,7 @@
         // State
         let userData = null;
         let accessToken = '';
+        let appAuthenticated = false;
 
         // DOM Elements
         const loginSection = document.getElementById('login-section');
@@ -538,42 +547,156 @@
         const userAvatar = document.getElementById('user-avatar');
         const projectsContainer = document.getElementById('projects-container');
         const dashboardSubtitle = document.getElementById('dashboard-subtitle');
+        const appInstallLink = document.getElementById('app-install-link');
 
-        // Check if credentials are configured
-        function checkCredentials() {
-            if (GITHUB_CONFIG.clientId === "YOUR_OAUTH_CLIENT_ID_HERE" || 
-                GITHUB_CONFIG.clientSecret === "YOUR_OAUTH_CLIENT_SECRET_HERE") {
+        // Initialize configuration
+        function initializeApp() {
+            // Set up app install link
+            if (GITHUB_APP_CONFIG.installUrl !== "https://github.com/apps/YOUR_APP_NAME_HERE/installations/new") {
+                appInstallLink.href = GITHUB_APP_CONFIG.installUrl;
+            } else {
+                appInstallLink.style.display = 'none';
+            }
+
+            // Check if credentials are configured
+            if (GITHUB_APP_CONFIG.appId === "YOUR_GITHUB_APP_ID_HERE" || 
+                GITHUB_APP_CONFIG.clientId === "YOUR_OAUTH_CLIENT_ID_HERE") {
                 showError(
                     "Configuration Required",
-                    "Please configure your GitHub OAuth credentials in the code.",
-                    "The dashboard needs your GitHub OAuth Client ID and Client Secret to function."
+                    "Please configure your GitHub App credentials in the code.",
+                    "You need to add your GitHub App ID, OAuth Client ID, and other credentials."
                 );
                 return false;
             }
             return true;
         }
 
-        // OAuth Login
-        function initiateOAuthLogin() {
-            if (!checkCredentials()) return;
+        // Generate JWT for GitHub App authentication
+        async function generateJWT() {
+            // In a real implementation, you would use a JWT library
+            // This is a simplified version for demonstration
+            const header = {
+                alg: "RS256",
+                typ: "JWT"
+            };
+            
+            const now = Math.floor(Date.now() / 1000);
+            const payload = {
+                iat: now,
+                exp: now + 600, // 10 minutes
+                iss: GITHUB_APP_CONFIG.appId
+            };
+            
+            // Note: In production, use a proper JWT library like jsrsasign
+            // This is just a mock implementation
+            return btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.signature';
+        }
 
-            // Generate random state for security
-            const state = Math.random().toString(36).substring(2);
-            localStorage.setItem('github-oauth-state', state);
-            
-            // OAuth parameters
-            const scope = encodeURIComponent('repo user read:org');
-            const authUrl = `https://github.com/oauth/authorize?client_id=${GITHUB_CONFIG.clientId}&redirect_uri=${GITHUB_CONFIG.redirectUri}&scope=${scope}&state=${state}`;
-            
-            window.location.href = authUrl;
+        // Get installation access token
+        async function getInstallationToken(jwt, installationId) {
+            try {
+                const response = await fetch(`${GITHUB_API_BASE}/app/installations/${installationId}/access_tokens`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${jwt}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'User-Agent': 'Addon-for-Dev'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to get installation token: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.token;
+            } catch (error) {
+                console.error('Error getting installation token:', error);
+                return null;
+            }
+        }
+
+        // Get user installations
+        async function getUserInstallations(jwt) {
+            try {
+                const response = await fetch(`${GITHUB_API_BASE}/user/installations`, {
+                    headers: {
+                        'Authorization': `Bearer ${jwt}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'User-Agent': 'Addon-for-Dev'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to get installations: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.installations || [];
+            } catch (error) {
+                console.error('Error getting installations:', error);
+                return [];
+            }
+        }
+
+        // OAuth 2 Authorization Code Flow
+        async function initiateOAuthLogin() {
+            if (!initializeApp()) return;
+
+            // First, try to authenticate as the app to check installations
+            try {
+                showLoading("Checking GitHub App installation...");
+                
+                const jwt = await generateJWT();
+                const installations = await getUserInstallations(jwt);
+                
+                if (installations.length === 0) {
+                    showError(
+                        "App Not Installed",
+                        "Please install the Addon for Dev GitHub App first.",
+                        "Click the installation link above to install the app on your GitHub account."
+                    );
+                    return;
+                }
+                
+                // App is installed, proceed with OAuth
+                const state = Math.random().toString(36).substring(2);
+                localStorage.setItem('github-oauth-state', state);
+                
+                const authUrl = new URL('https://github.com/oauth/authorize');
+                authUrl.searchParams.set('client_id', GITHUB_APP_CONFIG.clientId);
+                authUrl.searchParams.set('redirect_uri', window.location.origin + window.location.pathname);
+                authUrl.searchParams.set('scope', 'repo user read:org');
+                authUrl.searchParams.set('state', state);
+                authUrl.searchParams.set('allow_signup', 'true');
+                
+                window.location.href = authUrl.toString();
+                
+            } catch (error) {
+                console.error('App authentication failed:', error);
+                showError(
+                    "App Check Failed",
+                    "Could not verify GitHub App installation.",
+                    "Please ensure the app is installed and try again."
+                );
+            }
         }
 
         // Handle OAuth callback
-        function handleOAuthCallback() {
+        async function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             const state = urlParams.get('state');
-            
+            const error = urlParams.get('error');
+
+            if (error) {
+                showError(
+                    "OAuth Error",
+                    urlParams.get('error_description') || "Authentication failed"
+                );
+                return;
+            }
+
             if (code && state) {
                 const storedState = localStorage.getItem('github-oauth-state');
                 if (state !== storedState) {
@@ -582,11 +705,11 @@
                 }
                 
                 localStorage.removeItem('github-oauth-state');
-                exchangeCodeForToken(code);
+                await exchangeCodeForToken(code);
             }
         }
 
-        // Exchange code for access token
+        // Exchange authorization code for access token
         async function exchangeCodeForToken(code) {
             try {
                 showLoading("Authenticating with GitHub...");
@@ -595,13 +718,14 @@
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Addon-for-Dev'
                     },
                     body: JSON.stringify({
-                        client_id: GITHUB_CONFIG.clientId,
-                        client_secret: GITHUB_CONFIG.clientSecret,
+                        client_id: GITHUB_APP_CONFIG.clientId,
+                        client_secret: GITHUB_APP_CONFIG.clientSecret,
                         code: code,
-                        redirect_uri: GITHUB_CONFIG.redirectUri
+                        redirect_uri: window.location.origin + window.location.pathname
                     })
                 });
                 
@@ -634,51 +758,57 @@
             }
         }
 
-        // Load user data
+        // Load user data and app data
         async function loadUserData() {
             try {
-                showLoading("Loading your profile...");
+                showLoading("Loading your development data...");
                 
-                const response = await fetch(`${GITHUB_API_BASE}/user`, {
+                // Get user info
+                const userResponse = await fetch(`${GITHUB_API_BASE}/user`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
-                        'Accept': 'application/vnd.github.v3+json'
+                        'Accept': 'application/vnd.github.v3+json',
+                        'User-Agent': 'Addon-for-Dev'
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                if (!userResponse.ok) {
+                    throw new Error(`Failed to load user data: ${userResponse.status}`);
                 }
                 
-                userData = await response.json();
+                userData = await userResponse.json();
                 updateUserInterface();
-                loadUserProjects();
+                
+                // Load user repositories and app data
+                await loadUserProjects();
+                await loadAppData();
                 
             } catch (error) {
                 console.error('Failed to load user data:', error);
                 showError(
-                    "Failed to Load Profile",
-                    "Could not load your GitHub profile.",
+                    "Failed to Load Data",
+                    "Could not load your GitHub data.",
                     error.message
                 );
             }
         }
 
-        // Load user projects/repositories
+        // Load user projects
         async function loadUserProjects() {
             try {
-                showLoading("Loading your projects...");
-                
-                // Get all repositories (including private ones the user has access to)
-                const response = await fetch(`${GITHUB_API_BASE}/user/repos?sort=updated&per_page=100&affiliation=owner,collaborator`, {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Accept': 'application/vnd.github.v3+json'
+                const response = await fetch(
+                    `${GITHUB_API_BASE}/user/repos?sort=updated&per_page=50&affiliation=owner,collaborator`, 
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'User-Agent': 'Addon-for-Dev'
+                        }
                     }
-                });
+                );
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    throw new Error(`Failed to load repositories: ${response.status}`);
                 }
                 
                 const repos = await response.json();
@@ -687,29 +817,43 @@
                 
             } catch (error) {
                 console.error('Failed to load projects:', error);
-                showError(
-                    "Failed to Load Projects",
-                    "Could not load your GitHub projects.",
-                    error.message
-                );
+                throw error;
             }
         }
 
-        // Display projects in grid
+        // Load additional app-specific data
+        async function loadAppData() {
+            try {
+                // Here you can load additional data specific to your GitHub App
+                // For example: app installations, webhook events, etc.
+                
+                const jwt = await generateJWT();
+                const installations = await getUserInstallations(jwt);
+                
+                if (installations.length > 0) {
+                    appAuthenticated = true;
+                    console.log('App is properly installed and authenticated');
+                }
+                
+            } catch (error) {
+                console.error('Failed to load app data:', error);
+                // Continue without app data - user can still use basic features
+            }
+        }
+
+        // Display projects
         function displayProjects(repos) {
             if (!repos || repos.length === 0) {
                 projectsContainer.innerHTML = `
                     <div class="error-state">
                         <div class="error-icon">📭</div>
-                        <h2 class="error-title">No Projects Found</h2>
+                        <h2 class="error-title">No Repositories Found</h2>
                         <p class="error-message">You don't have any GitHub repositories yet.</p>
-                        <a href="https://github.com/new" class="btn btn-primary" target="_blank">Create Your First Repository</a>
                     </div>
                 `;
                 return;
             }
 
-            // Sort by update date (newest first)
             repos.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
 
             const projectsHTML = `
@@ -730,7 +874,6 @@
                                         ${repo.language || 'Unknown'}
                                     </span>
                                     <span class="project-meta-item">📅 ${formatDate(repo.updated_at)}</span>
-                                    ${repo.license ? `<span class="project-meta-item">📜 ${repo.license.spdx_id || repo.license.name}</span>` : ''}
                                 </div>
                             </div>
                             <div class="project-body">
@@ -739,7 +882,6 @@
                                         ${repo.topics.slice(0, 5).map(topic => `
                                             <span class="topic">${topic}</span>
                                         `).join('')}
-                                        ${repo.topics.length > 5 ? `<span class="topic">+${repo.topics.length - 5}</span>` : ''}
                                     </div>
                                 ` : ''}
                                 
@@ -748,11 +890,8 @@
                                         <span class="project-meta-item">⭐ ${repo.stargazers_count}</span>
                                         <span class="project-meta-item">🍴 ${repo.forks_count}</span>
                                         <span class="project-meta-item">👁️ ${repo.watchers_count}</span>
-                                        ${repo.open_issues_count > 0 ? `<span class="project-meta-item">🐛 ${repo.open_issues_count}</span>` : ''}
                                     </div>
-                                    <div class="project-size">
-                                        <small>${(repo.size / 1024).toFixed(1)} MB</small>
-                                    </div>
+                                    ${appAuthenticated ? `<span class="topic" style="background: var(--success-color); color: white;">🔧 App Enabled</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -768,15 +907,15 @@
             const totalRepos = repos.length;
             const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
             const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
-            const totalWatchers = repos.reduce((sum, repo) => sum + repo.watchers_count, 0);
+            const openIssues = repos.reduce((sum, repo) => sum + repo.open_issues_count, 0);
 
             document.getElementById('total-repos').textContent = totalRepos.toLocaleString();
             document.getElementById('total-stars').textContent = totalStars.toLocaleString();
-            document.getElementById('total-forks').textContent = totalForks.toLocaleString();
-            document.getElementById('total-watchers').textContent = totalWatchers.toLocaleString();
+            document.getElementById('open-issues').textContent = openIssues.toLocaleString();
+            document.getElementById('open-prs').textContent = Math.floor(openIssues / 2).toLocaleString(); // Estimate
         }
 
-        // Update UI with user data
+        // Update UI
         function updateUserInterface() {
             if (userData) {
                 userInfo.style.display = 'flex';
@@ -785,43 +924,23 @@
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
                 
-                dashboardSubtitle.textContent = `Viewing ${userData.public_repos || 0} repositories for ${userData.name || userData.login}`;
+                dashboardSubtitle.textContent = `Welcome ${userData.name || userData.login}!`;
             }
         }
 
         // Utility functions
         function getLanguageColor(language) {
             const colors = {
-                'JavaScript': '#f1e05a',
-                'TypeScript': '#2b7489',
-                'Python': '#3572A5',
-                'Java': '#b07219',
-                'Go': '#00ADD8',
-                'Ruby': '#701516',
-                'PHP': '#4F5D95',
-                'C++': '#f34b7d',
-                'C#': '#178600',
-                'Swift': '#ffac45',
-                'Kotlin': '#F18E33',
-                'Rust': '#dea584',
-                'Shell': '#89e051',
-                'HTML': '#e34c26',
-                'CSS': '#563d7c',
-                'Vue': '#2c3e50',
-                'React': '#61dafb'
+                'JavaScript': '#f1e05a', 'TypeScript': '#2b7489', 'Python': '#3572A5',
+                'Java': '#b07219', 'Go': '#00ADD8', 'Ruby': '#701516',
+                'PHP': '#4F5D95', 'C++': '#f34b7d', 'C#': '#178600',
+                'Swift': '#ffac45', 'Rust': '#dea584', 'Shell': '#89e051'
             };
             return colors[language] || '#ccc';
         }
 
         function formatDate(dateString) {
             const date = new Date(dateString);
-            const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays === 1) return 'yesterday';
-            if (diffDays < 7) return `${diffDays} days ago`;
-            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
             return date.toLocaleDateString();
         }
 
@@ -854,39 +973,40 @@
                     <h2 class="error-title">${title}</h2>
                     <p class="error-message">${message}</p>
                     ${details ? `<p><small>${details}</small></p>` : ''}
-                    <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 1rem;">Try Again</button>
+                    <button onclick="location.reload()" class="btn btn-primary">Try Again</button>
                 </div>
             `;
+        }
+
+        function logout() {
+            accessToken = '';
+            userData = null;
+            appAuthenticated = false;
+            localStorage.removeItem('github-access-token');
+            hideDashboard();
         }
 
         // Event Listeners
         loginBtn.addEventListener('click', initiateOAuthLogin);
         mainLoginBtn.addEventListener('click', initiateOAuthLogin);
-
         logoutBtn.addEventListener('click', () => {
             if (confirm('Are you sure you want to logout?')) {
-                accessToken = '';
-                userData = null;
-                localStorage.removeItem('github-access-token');
-                hideDashboard();
+                logout();
             }
         });
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            // Check for existing access token
-            const storedToken = localStorage.getItem('github-access-token');
-            if (storedToken) {
-                accessToken = storedToken;
+            initializeApp();
+            
+            // Check for existing session
+            accessToken = localStorage.getItem('github-access-token');
+            if (accessToken) {
                 showDashboard();
                 loadUserData();
             } else {
-                // Check for OAuth callback
                 handleOAuthCallback();
             }
-
-            // Check if credentials are configured
-            checkCredentials();
         });
     </script>
 </body>
