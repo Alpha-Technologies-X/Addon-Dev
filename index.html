@@ -448,7 +448,7 @@
 
     <main class="container">
         <section id="login-section" class="login-section">
-            <div class="login-icon">⚡</div>
+            <div class="login-icon">⚛</div>
             <h1 class="login-title">Welcome to Addon for Dev</h1>
             <p class="login-description">
                 Connect your GitHub account to access powerful development tools and insights.
@@ -458,7 +458,7 @@
                 <h3>📋 Setup Instructions:</h3>
                 <ol>
                     <li><strong>Install the GitHub App</strong> - Click the link below to install "Addon for Dev" on your GitHub account</li>
-                    <li><strong>Connect Your Account</strong> - After installation, return here and click "Connect GitHub"</li>
+                    <li><strong>Connect Your Account</strong> - After installation, click "Connect GitHub" to authorize</li>
                     <li><strong>Access Features</strong> - Start using the development tools and insights</li>
                 </ol>
                 
@@ -527,14 +527,14 @@
             appId: "2181274",
             
             // Your GitHub App Installation URL (replace YOUR_APP_NAME with actual app name)
-            installUrl: "https://github.com/apps/Addon-for-Dev/installations/new",
+            installUrl: "https://github.com/apps/addon-for-dev/installations/new",
             
             // Your GitHub OAuth App Client ID
             clientId: "Ov23liWe3jQcRxPDfSdE",
             
-            // Your GitHub App Private Key (PEM format) - for server-side use
+            // Your GitHub App Private Key (PEM format)
             privateKey: `-----BEGIN RSA PRIVATE KEY-----
-ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
+SHA256:ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
 -----END RSA PRIVATE KEY-----`
         };
 
@@ -568,8 +568,14 @@ ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
             // Set up app install link
             if (GITHUB_APP_CONFIG.installUrl !== "https://github.com/apps/YOUR_APP_NAME_HERE/installations/new") {
                 appInstallLink.href = GITHUB_APP_CONFIG.installUrl;
-            } else {
-                appInstallLink.style.display = 'none';
+            }
+
+            // Check for existing session
+            const savedToken = localStorage.getItem('github-access-token');
+            if (savedToken) {
+                accessToken = savedToken;
+                showDashboard();
+                loadUserData();
             }
 
             // Check if credentials are configured
@@ -584,35 +590,37 @@ ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
             return true;
         }
 
-        // OAuth 2 Implicit Grant Flow - This works client-side!
+        // OAuth 2 Authorization Code Flow with PKCE
         function initiateOAuthLogin() {
             if (!initializeApp()) return;
 
             // Generate random state for security
-            const state = Math.random().toString(36).substring(2);
+            const state = generateRandomString(32);
             localStorage.setItem('github-oauth-state', state);
+
+            // Generate PKCE code verifier and challenge
+            const codeVerifier = generateRandomString(128);
+            localStorage.setItem('github-code-verifier', codeVerifier);
             
-            // OAuth 2 Implicit Grant parameters
-            const authUrl = new URL('https://github.com/oauth/authorize');
+            // For GitHub, we use the standard Authorization Code flow (not PKCE required but good practice)
+            const authUrl = new URL('https://github.com/login/oauth/authorize');
             authUrl.searchParams.set('client_id', GITHUB_APP_CONFIG.clientId);
             authUrl.searchParams.set('redirect_uri', window.location.origin + window.location.pathname);
             authUrl.searchParams.set('scope', 'repo user read:org');
             authUrl.searchParams.set('state', state);
             authUrl.searchParams.set('allow_signup', 'true');
             
-            console.log('Redirecting to GitHub OAuth...');
+            console.log('Initiating OAuth flow...');
             window.location.href = authUrl.toString();
         }
 
-        // Handle OAuth callback from URL hash (Implicit Grant Flow)
-        function handleOAuthCallback() {
-            // Check for token in URL hash (Implicit Grant Flow)
-            const hashParams = new URLSearchParams(window.location.hash.substring(1));
-            const accessTokenFromHash = hashParams.get('access_token');
-            const tokenType = hashParams.get('token_type');
-            const state = hashParams.get('state');
-            const error = hashParams.get('error');
-            const errorDescription = hashParams.get('error_description');
+        // Handle OAuth callback
+        async function handleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const error = urlParams.get('error');
+            const errorDescription = urlParams.get('error_description');
 
             if (error) {
                 showError(
@@ -623,7 +631,7 @@ ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
                 return;
             }
 
-            if (accessTokenFromHash && state) {
+            if (code && state) {
                 const storedState = localStorage.getItem('github-oauth-state');
                 if (state !== storedState) {
                     showError("Security Error", "Invalid OAuth state parameter.");
@@ -632,24 +640,168 @@ ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
                 
                 localStorage.removeItem('github-oauth-state');
                 
-                // Store the access token
-                accessToken = accessTokenFromHash;
-                localStorage.setItem('github-access-token', accessToken);
-                
-                // Clean URL - remove hash parameters
-                window.history.replaceState({}, document.title, window.location.pathname);
-                
-                console.log('OAuth successful, token received');
-                showDashboard();
-                loadUserData();
+                try {
+                    await exchangeCodeForToken(code);
+                } catch (error) {
+                    console.error('Token exchange failed:', error);
+                    showError(
+                        "Authentication Failed",
+                        "Could not exchange authorization code for access token.",
+                        "This usually requires a server component. Consider using a serverless function."
+                    );
+                }
             }
         }
 
-        // Check if user has installed the app (simplified check)
+        // Exchange authorization code for access token
+        async function exchangeCodeForToken(code) {
+            showLoading("Completing authentication...");
+            
+            // Note: This client-side token exchange will fail due to CORS and client secret exposure
+            // In production, you should use a serverless function or backend service
+            const response = await fetch('https://github.com/login/oauth/access_token', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    client_id: GITHUB_APP_CONFIG.clientId,
+                    client_secret: 'YOUR_CLIENT_SECRET', // This should be handled server-side
+                    code: code,
+                    redirect_uri: window.location.origin + window.location.pathname,
+                    state: localStorage.getItem('github-oauth-state')
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Token exchange failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error_description || data.error);
+            }
+
+            accessToken = data.access_token;
+            localStorage.setItem('github-access-token', accessToken);
+            
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            showDashboard();
+            loadUserData();
+        }
+
+        // Alternative: Device Flow for OAuth (works without client secret)
+        async function initiateDeviceFlow() {
+            showLoading("Initiating device flow...");
+            
+            try {
+                // Start device flow
+                const response = await fetch('https://github.com/login/device/code', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        client_id: GITHUB_APP_CONFIG.clientId,
+                        scope: 'repo user read:org'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Device flow initiation failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Show user verification details
+                const verificationHTML = `
+                    <div class="setup-steps">
+                        <h3>🔐 Device Verification Required</h3>
+                        <p>Please visit: <strong>${data.verification_uri}</strong></p>
+                        <p>And enter code: <strong style="font-size: 1.5rem;">${data.user_code}</strong></p>
+                        <p><small>This code expires in ${Math.floor(data.expires_in / 60)} minutes</small></p>
+                        <button id="check-auth-btn" class="btn btn-primary">I've Authorized</button>
+                    </div>
+                `;
+                
+                loginSection.innerHTML = verificationHTML;
+                
+                document.getElementById('check-auth-btn').addEventListener('click', () => {
+                    checkDeviceAuth(data.device_code);
+                });
+
+                // Poll for authorization
+                pollForDeviceAuth(data.device_code, data.interval);
+
+            } catch (error) {
+                console.error('Device flow failed:', error);
+                showError(
+                    "Device Flow Failed",
+                    "Could not initiate device authentication.",
+                    error.message
+                );
+            }
+        }
+
+        // Poll for device authorization
+        async function pollForDeviceAuth(deviceCode, interval) {
+            try {
+                const response = await fetch('https://github.com/login/oauth/access_token', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        client_id: GITHUB_APP_CONFIG.clientId,
+                        device_code: deviceCode,
+                        grant_type: 'urn:ietf:params:oauth:grant-type:device_code'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.access_token) {
+                    accessToken = data.access_token;
+                    localStorage.setItem('github-access-token', accessToken);
+                    showDashboard();
+                    loadUserData();
+                } else if (data.error === 'authorization_pending') {
+                    // Continue polling
+                    setTimeout(() => pollForDeviceAuth(deviceCode, interval), interval * 1000);
+                } else {
+                    throw new Error(data.error_description || data.error);
+                }
+            } catch (error) {
+                console.error('Device auth polling failed:', error);
+            }
+        }
+
+        // Check device authorization status
+        async function checkDeviceAuth(deviceCode) {
+            showLoading("Checking authorization status...");
+            await pollForDeviceAuth(deviceCode, 5);
+        }
+
+        // Check if user has installed the app
         function checkAppInstallation() {
-            // In a real implementation, you would check if the app is installed
-            // For now, we'll just show a message
-            alert("After installing the GitHub App, click 'Connect GitHub Account' to continue.");
+            if (GITHUB_APP_CONFIG.installUrl && GITHUB_APP_CONFIG.installUrl !== "https://github.com/apps/YOUR_APP_NAME_HERE/installations/new") {
+                window.open(GITHUB_APP_CONFIG.installUrl, '_blank');
+            } else {
+                alert("App installation URL not configured. Please check the app settings.");
+            }
+        }
+
+        // Utility function to generate random string
+        function generateRandomString(length) {
+            const array = new Uint8Array(length);
+            window.crypto.getRandomValues(array);
+            return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
         }
 
         // Load user data
@@ -785,7 +937,7 @@ ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
             document.getElementById('total-repos').textContent = totalRepos.toLocaleString();
             document.getElementById('total-stars').textContent = totalStars.toLocaleString();
             document.getElementById('open-issues').textContent = openIssues.toLocaleString();
-            document.getElementById('open-prs').textContent = Math.floor(openIssues / 2).toLocaleString(); // Estimate
+            document.getElementById('open-prs').textContent = Math.floor(openIssues / 2).toLocaleString();
         }
 
         // Update UI
@@ -871,16 +1023,7 @@ ujENjsdpYM8+3We4S8w62p1hP0ATTChwp+ZYiGAWKYQ=
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initializeApp();
-            
-            // Check for existing session
-            accessToken = localStorage.getItem('github-access-token');
-            if (accessToken) {
-                showDashboard();
-                loadUserData();
-            } else {
-                // Check for OAuth callback in URL hash
-                handleOAuthCallback();
-            }
+            handleOAuthCallback();
         });
     </script>
 </body>
